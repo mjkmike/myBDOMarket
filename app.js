@@ -66,42 +66,46 @@ var loginCall = function(options, jar) {
 
       csrfString = new RegExp('"_csrf" value=".*"').exec(body);
       if(csrfString && csrfString.length > 0) {
-        perform_loginCall(options, jar, csrfString[0].toString().split('\"')[3]);
+        perform_otpCall(options, jar, csrfString[0].toString().split('\"')[3]);
       }
     }
   });
 };
 
-var perform_loginCall = function(options, jar, csrf) {
+var perform_otpCall = function(options, jar, csrf) {
     //build options for perform_login call
-    perform_loginOptions = options;
-    perform_loginOptions.method = "POST";
-    perform_loginOptions.scheme = "https";
-    perform_loginOptions.url = perform_loginOptions.url + "/bdo/perform_login";
-    perform_loginOptions.formData = JSON.stringify({
-      bdoLogin: "true",
-      username: "BDO_USERNAME",
-      password: "BDO_PASSWORD",
+    perform_otpOptions = options;
+    perform_otpOptions.method = "POST";
+    perform_otpOptions.scheme = "https";
+    perform_otpOptions.url = perform_otpOptions.url + "login/otp";
+    perform_otpOptions.body = JSON.stringify({
+      "bdperformLoginUrl": "perform_login",
+      username: "BDOUSERNAME",
+      password: "BDOPASSWORD",
       "_csrf": csrf
     });
-    perform_loginOptions.headers = {
+    perform_otpOptions.headers = {
+      
       "accept": "text/html,application/xhtml+xml,application/xml;q=0.9,image/webp,image/apng,*/*;q=0.8,application/signed-exchange;v=b3",
       "accept-encoding": "gzip, deflate, br",
       "accept-language": "en-US,en;q=0.9,pl;q=0.8,zh;q=0.7,zh-TW;q=0.6",
       "cache-control": "no-cache",
-      "content-length": "110",
+      "content-length": "120",
+      "origin": "https://account.playkakaogames.com",
       "content-type": "application/x-www-form-urlencoded",
+      "referer": "https://account.playkakaogames.com/bdo/login",
       "pragma": "no-cache",
       "set-fetch-mode": "navigate",
       "sec-fetch-site": "same-origin",
+      "sec-fetch-user": "?1",
       "upgrade-insecure-requests": 1,
       "user-agent": "Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/78.0.3904.108 Safari/537.36"
     };
-    perform_loginOptions.cookie = jar.getCookieHeaderString(options.url)
+    perform_otpOptions.cookie = jar.getCookieHeaderString(options.url)
     
 
-    request(perform_loginOptions, function(err, res, body) {
-      console.log("");
+    request(perform_otpOptions, function(err, res, body) {
+      reconsole.log("");
     });
 };
 
